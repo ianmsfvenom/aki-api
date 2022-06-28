@@ -2,7 +2,7 @@ import axios, { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { issues, region } from '../constants/Client';
 import * as os from 'os';
-
+import { Agent } from 'https'
 interface AkinatorHeaders {
   'User-Agent': string,
   'x-requested-with': string
@@ -127,7 +127,7 @@ const getServer = async (region: region): Promise<AkiURL | undefined> => {
     const [language, themeName] = split;
 
     const url = `https://${language}.akinator.com`;
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, {httpsAgent: new Agent({rejectUnauthorized: false})});
 
     const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
     const parsed : AkinatorThemesToPlay[] = JSON.parse(data.match(regex));
@@ -189,7 +189,7 @@ export type configOptions = {
 export const request = async (url: string, checkParamProperty: checkParamProperty, region: region, config: configOptions): Promise<AkinatorAPIError | AkinatorResult> => {
   const axiosConfig = (config || {}) as AxiosRequestConfig;
   
-  const { status, data } = await axios.get<number, AkinatorPromise>(url, { headers, params, ...axiosConfig });
+  const { status, data } = await axios.get<number, AkinatorPromise>(url, { headers, params, httpsAgent: new Agent({rejectUnauthorized: false}) ,...axiosConfig });
 
   if (status !== 200 || !data) {
     throw new Error(`A problem occurred with making the request. status: ${status}`);

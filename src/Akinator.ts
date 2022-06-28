@@ -3,7 +3,7 @@ import { request, regionURL, AkinatorAPIError, getSession, guess } from './funct
 import { jQuery, region, regions } from './constants/Client';
 import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent';
 import { configOptions } from './functions/Request';
-
+import { Agent } from 'https'
 interface AkinatorConstructor {
   region: region
   childMode?: boolean
@@ -70,7 +70,7 @@ export default class Akinator {
 
     this.uri = server.url;
     this.urlApiWs = server.urlWs;
-    this.uriObj = await getSession();
+    this.uriObj = await getSession({httpsAgent: new Agent({rejectUnauthorized: false})});
     if (this.uriObj instanceof Error) {
       throw this.uriObj;
     }
