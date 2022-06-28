@@ -70,7 +70,7 @@ export default class Akinator {
 
     this.uri = server.url;
     this.urlApiWs = server.urlWs;
-    this.uriObj = await getSession({httpsAgent: new Agent({rejectUnauthorized: false})});
+    this.uriObj = await getSession({ httpsAgent: new Agent({rejectUnauthorized: false}) });
     if (this.uriObj instanceof Error) {
       throw this.uriObj;
     }

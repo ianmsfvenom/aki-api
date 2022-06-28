@@ -60,8 +60,4 @@ typings/
 # node-modules
 node_modules
 
-# typescript
-dist
-*.js
-
 /.vscode
